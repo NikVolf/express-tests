@@ -4,10 +4,12 @@
 
 var express = require('express');
 var router = express.Router();
+var q = require("q");
 
 router.get("/js/api/:service/client.js", sendClientJS);
 router.get("/api/:service/:id", serviceCall(restGetOne));
 router.get("/api/:service", serviceCall(restGet));
+router.post("/api/:service", serviceCall(restGet));
 router.get("/api", listServices);
 
 module.exports = router;
@@ -24,6 +26,8 @@ function listServices(req, res) {
 
 function resolveService(serviceReference) {
     var serviceModule = require("./../services/" + serviceReference);
+    if (serviceModule.isPrivate)
+        return null;
     return serviceModule();
 }
 
@@ -31,31 +35,51 @@ function serviceCall(fn) {
     return function(req, res, next) {
         var serviceName = req.param("service");
         var service = resolveService(serviceName);
-        fn.bind({
+        if (service == null) {
+            res.sendStatus(403);
+            return;
+        }
+
+        var context = {
             req: req,
             res: res,
             next: next
-        })(service);
+        };
+
+        fn(context, service);
     }
 }
 
-function restGet(service) {
-    this.res.json(service.getItems());
+function jsonResponse (context) {
+    return function(data) { context.res.json(data); };
 }
 
-function restGetOne(service) {
-    this.res.json(service.getItem(this.req.params.id));
+function restGet(context, service) {
+    // why this shit gets the request be forever pending ??
+    // q.when(service.getItems()).then(jsonResponse(context));
+    q.when(service.getItems()).then(function(data) {
+        context.res.json(data);
+    });
 }
 
-function restUpdate(service) {
-    var original = service.getItem(this.req.params.id);
-    var update = this.req.body;
-    _.extend(original, update);
-    service.updateItem(original);
+function restGetOne(context, service) {
+    q.when(service.getItem(this.req.params.id)).then(function(data) {
+        context.res.json(data);
+    });
 }
 
-function restDelete(service) {
-    service.deleteItem(this.req.params.id);
+function restUpdate(context, service) {
+    q.when(service.updateItem(this.req.params.id, this.req.body)).then(this.res.json.bind(this));
+}
+
+function restDelete(context, service) {
+    q.when(service.deleteItem(this.req.params.id)).then(this.res.sendStatus(200));
+}
+
+function restCreate(context, service) {
+    q.when(service.createItem(this.req.body)).then(function(data){
+        context.res.json(data);
+    });
 }
 
 function rpcCall(serviceReference, methodName, objectId) {

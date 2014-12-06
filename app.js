@@ -27,6 +27,11 @@ app.use('/', api);
 app.use('/', routes);
 app.use('/users', users);
 
+app.use(function(err, req, res, next) {
+    if(!err) return next(); // you also need this line
+    console.log("error: %s", err);
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

@@ -11,15 +11,56 @@ define([], function() {
         self.fetch = function(params) {
             var deferred = $.Deferred();
 
-            $.ajax(
-                {
-                    url: '/api/' + self.name,
-                    type: "GET",
-                    data: $.param(params || {}),
-                    success: function (response) {
+            if (_.isObject(params)) {
+                $.ajax(
+                    {
+                        url: '/api/' + self.name,
+                        type: "GET",
+                        data: $.param(params || {}),
+                        success: function (response) {
+                            deferred.resolve(response);
+                        }
+                    });
+
+                return deferred.promise();
+            }
+
+            $.ajax({
+                url: '/api/' + self.name + "/" + params,
+                type: "GET",
+                data: $.param(params || {}),
+                success: function (response) {
+                    deferred.resolve(response);
+                }
+            });
+
+
+            return deferred.promise();
+        };
+
+        self.save = function(item) {
+            var deferred = $.Deferred();
+            if (item.isNew)
+            {
+                $.ajax({
+                    url: "api/" + self.name + "/",
+                    type: "POST",
+                    data: item,
+                    success: function(response) {
                         deferred.resolve(response);
                     }
                 });
+                return deferred.promise();
+            }
+
+            $.ajax({
+                url: "api/" + self.name + "/" + item.id,
+                type: "PUT",
+                data: item,
+                success: function(response) {
+                    deferred.resolve();
+                }
+            });
 
             return deferred.promise();
         }

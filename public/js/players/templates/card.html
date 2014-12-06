@@ -1,0 +1,9 @@
+<div>
+    <span>name: </span>
+    <div data-bind="if: isEdited">
+        <input data-bind="value: name" />
+    </div>
+    <div data-bind="ifnot: isEdited">
+        <span data-bind="text: name, click: edit"></span>
+    </div>
+</div>

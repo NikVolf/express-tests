@@ -4,7 +4,7 @@
 var util = require("util");
 var _ = require("underscore");
 
-module.exports = function(reference) {
+var serviceBase = module.exports = function(reference) {
     var self = {};
 
     self.reference = reference;
@@ -23,3 +23,5 @@ module.exports = function(reference) {
 
     return self;
 };
+
+serviceBase.isPrivate = false;
