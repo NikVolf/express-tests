@@ -29,12 +29,21 @@ var mongoServiceBase = module.exports = function(reference, collection) {
         mongoData._id = new mongojs.ObjectId();
 
         self.db[self.collection].save(mongoData, function() {
-
+            delete mongoData._id;
+            defer.resolve(mongoData);
         });
+
+        return defer.promise;
     };
 
     self.getItem = function(id) {
         var defer = q.defer();
+
+        self.db[self.collection].findOne({ id: id }, function(error, item) {
+            defer.resolve(item);
+        });
+
+        return defer.promise;
 
     };
 

@@ -9,7 +9,7 @@ var q = require("q");
 router.get("/js/api/:service/client.js", sendClientJS);
 router.get("/api/:service/:id", serviceCall(restGetOne));
 router.get("/api/:service", serviceCall(restGet));
-router.post("/api/:service", serviceCall(restGet));
+router.post("/api/:service", serviceCall(restCreate));
 router.get("/api", listServices);
 
 module.exports = router;
@@ -77,7 +77,7 @@ function restDelete(context, service) {
 }
 
 function restCreate(context, service) {
-    q.when(service.createItem(this.req.body)).then(function(data){
+    q.when(service.createItem(context.req.body)).then(function(data){
         context.res.json(data);
     });
 }

@@ -1,0 +1,2 @@
+use test1
+db.createUser({ user: "web", pwd: "webreadwrite", roles: ["readWrite"]})

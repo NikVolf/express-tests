@@ -11,7 +11,7 @@ define([], function() {
         self.fetch = function(params) {
             var deferred = $.Deferred();
 
-            if (_.isObject(params)) {
+            if (_.isObject(params) || !params ) {
                 $.ajax(
                     {
                         url: '/api/' + self.name,

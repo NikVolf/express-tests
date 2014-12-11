@@ -9,11 +9,11 @@ define(["api/players/client", 'text!./templates/list.html', './card'], function(
             self.items = ko.observableArray();
             self.editable = ko.observable(true);
 
-            api.fetch().then(self.populate);
-
             self.populate = function(data) {
                 _.each(data, self.push);
             };
+
+            $.when(api.fetch()).then(self.populate);
 
             self.push = function(itemData) {
                 self.items.push(playerCard.viewModel({ value: itemData }));
