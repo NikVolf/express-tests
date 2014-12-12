@@ -5,5 +5,7 @@
     </div>
     <div data-bind="ifnot: isEdited, click: edit">
         <span data-bind="text: name"></span>
+        <span data-bind="if: isModified">&nbsp; *</span>
     </div>
+
 </div>

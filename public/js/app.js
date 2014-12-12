@@ -40,7 +40,7 @@ define(["ko", "underscore", "utils/loading"], function(ko, loading) {
         };
 
         self.pushComponent = function(component) {
-            self.componentName(component.name);
+            self.componentName(component.componentName);
         };
 
         self.component.subscribe(self.componentChanged);

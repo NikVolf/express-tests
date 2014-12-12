@@ -2,33 +2,21 @@
  * Created by nikky on 12/6/14.
  */
 
-define(["ko", "text!./templates/card.html"], function(ko, template) {
-    var playerCard = {
-        componentName: 'player-card',
-        template: template,
-        viewModel: function(options) {
-            if (options.value && options.value.isViewModel)
-                return options.value;
+define(["shared/BaseViewModel", "text!./templates/card.html"], function(BaseViewModel, template) {
+    var PlayerCard = function(config) {
+        var self = BaseViewModel({
+            fields: ["name"]
+        });
 
-            var self = {};
+        self.title = "Player Card";
 
-            self.isViewModel = true;
-
-            self.data = options.value;
-
-            self.name = ko.observable(self.data.name);
-
-            self.isEdited = ko.observable(false);
-
-            self.edit = function () {
-                self.isEdited(true);
-            };
-
-            return self;
-        }
+        return self;
     };
 
-    ko.components.register(playerCard.componentName, playerCard);
+    PlayerCard.componentName = "player-card";
+    PlayerCard.template = template;
 
-    return playerCard;
+    BaseViewModel.extendedWith(PlayerCard);
+
+    return PlayerCard;
 });
