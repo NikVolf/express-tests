@@ -69,7 +69,13 @@ define(['./BaseViewModel'],
 
                 instance.parse(defaultData);
 
+                instance.save().then(self.push.bind(self, instance));
+
+            };
+
+            self.push = function(instance) {
                 self.items.push(instance);
+                instance.isEdited(true);
             };
 
             return self;

@@ -7,6 +7,8 @@ define([], function() {
     var BaseViewModel = function(config) {
         var self = {};
 
+        self.diagnostic = window.diagnostic || (window.diagnostic = ko.observable(false));
+
         _.extend(self, _.pick(config, "api", "template", "fields", "data"));
 
         if (!self.fields && self.data)
@@ -16,11 +18,44 @@ define([], function() {
 
         self.observables = [];
 
+        self.getFieldValue = function(key) {
+            var result = {
+                defined: false,
+                value: null
+            };
+
+            var keyValue = self[key];
+
+            if (!keyValue)
+                return result;
+
+            if (keyValue.isViewModel)
+            {
+                result.defined = true;
+                result.value = keyValue.toJSON();
+                return result;
+            }
+
+            if (_.isFunction(keyValue)) {
+                result.defined = true;
+                result.value = keyValue();
+                return result;
+            }
+
+            return result;
+        };
+
         self.parse = function(raw) {
             _.each(self.fields, self.parseField.bind(self, raw));
 
-            self.isNew(false);
-            self.isModified(false);
+            self.id = ko.observable(raw.id);
+
+            self.modified([])
+            ;
+            self.isNew(!self.id());
+            self.id.subscribe(function(newValue) {
+                 self.isNew(!!!newValue);
+            });
         };
 
         self.modified = ko.observableArray([]);
@@ -33,7 +68,7 @@ define([], function() {
             if (property.isViewModel) {
                 property.isModified.subscribe(function(newValue) {
                     if (newValue)
-                        self.modified.push(key);
+                        self.modified.unshift(key);
                     else self.modified.remove(key);
                 });
 
@@ -77,19 +112,15 @@ define([], function() {
 
             if (!self[instanceKey]) {
                 self[instanceKey] = property;
-                self.propertyCreated(property);
+                self.propertyCreated(instanceKey, property);
             }
 
-
-            self[instanceKey] || (self[instanceKey] = self.createObservable(instanceKey, rawValue));
-            self[instanceKey] = ko.observable(rawValue);
+            self[instanceKey] = property;
 
             self.observables.push(instanceKey);
         };
 
         self.isNew = ko.observable(true);
-
-        self.isModified = ko.observable(false);
 
         self.isEdited = ko.observable(false);
 
@@ -98,7 +129,14 @@ define([], function() {
         };
 
         self.save = function() {
-            return self.api.save(self.toJSON());
+            var deferred = $.Deferred();
+            self.api.save(self.toJSON()).then(function(serverState) {
+                if (serverState)
+                    self.parse(serverState);
+
+                deferred.resolve();
+            });
+            return deferred.promise();
         };
 
         self.saveIfModified = function() {
@@ -106,7 +144,7 @@ define([], function() {
         };
 
         self.toJSON = function() {
-            var result;
+            var result = {};
             _.each(self.observables, function(observable) {
                 var fieldValue = self[observable];
                 if (fieldValue.toJSON)
@@ -116,6 +154,11 @@ define([], function() {
 
                 result[observable] = fieldValue;
             });
+
+            if (!self.isNew())
+                result.id = self.id();
+
+            return result;
         };
 
         return self;

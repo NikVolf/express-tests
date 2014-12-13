@@ -1,8 +1,8 @@
 /**
  * Created by nikky on 12/6/14.
  */
-define(['shared/CollectionViewModel', "api/players/client", 'text!./templates/list.html', './card'],
-    function(CollectionViewModel, api, template, PlayerCard) {
+define(['shared/ListViewModel', "api/players/client", 'text!./templates/list.html', './card'],
+    function(ListViewModel, api, template, PlayerCard) {
 
         var PlayerList = function() {
             var collectionCfg = {
@@ -10,7 +10,7 @@ define(['shared/CollectionViewModel', "api/players/client", 'text!./templates/li
                 "viewModel": PlayerCard
             };
 
-            var self = CollectionViewModel(collectionCfg);
+            var self = ListViewModel(collectionCfg);
 
             self.itemDefaults = {
                 name: "New Player"
@@ -28,7 +28,7 @@ define(['shared/CollectionViewModel', "api/players/client", 'text!./templates/li
         PlayerList.componentName = "player-list";
         PlayerList.template = template;
 
-        CollectionViewModel.extendedWith(PlayerList);
+        ListViewModel.extendedWith(PlayerList);
 
         return PlayerList;
 

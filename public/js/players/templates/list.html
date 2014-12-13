@@ -1,5 +1,6 @@
 <div class="player-list-controls" data-bind="if:editable">
     <input type="button" value="add" data-bind="click:add" />
+    <input type="button" value="save list" data-bind="click:save" />
 </div>
 <ul class="player-list" data-bind="foreach: items">
     <player-card params="value: $data"></player-card>

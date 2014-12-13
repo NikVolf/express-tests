@@ -40,7 +40,7 @@ define([], function() {
 
         self.save = function(item) {
             var deferred = $.Deferred();
-            if (item.isNew)
+            if (!item.id)
             {
                 $.ajax({
                     url: "api/" + self.name + "/",
@@ -58,7 +58,7 @@ define([], function() {
                 type: "PUT",
                 data: item,
                 success: function(response) {
-                    deferred.resolve();
+                    deferred.resolve(response);
                 }
             });
 

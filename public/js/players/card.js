@@ -4,11 +4,12 @@
 
 define(["shared/BaseViewModel", "text!./templates/card.html"], function(BaseViewModel, template) {
     var PlayerCard = function(config) {
-        var self = BaseViewModel({
-            fields: ["name"]
-        });
+        var merged = _.extend({ fields: ["name"] }, config);
+        var self = BaseViewModel(merged);
 
         self.title = "Player Card";
+
+        self.isSelected = ko.observable(false);
 
         return self;
     };

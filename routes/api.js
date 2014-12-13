@@ -10,6 +10,7 @@ router.get("/js/api/:service/client.js", sendClientJS);
 router.get("/api/:service/:id", serviceCall(restGetOne));
 router.get("/api/:service", serviceCall(restGet));
 router.post("/api/:service", serviceCall(restCreate));
+router.put("/api/:service/:id", serviceCall(restUpdate));
 router.get("/api", listServices);
 
 module.exports = router;
@@ -69,9 +70,10 @@ function restGetOne(context, service) {
 }
 
 function restUpdate(context, service) {
-    q.when(service.updateItem(this.req.params.id, this.req.body)).then(this.res.json.bind(this));
+    q.when(service.updateItem(context.req.params.id, context.req.body)).then(function(data){
+        context.res.json(data);
+    });
 }
-
 function restDelete(context, service) {
     q.when(service.deleteItem(this.req.params.id)).then(this.res.sendStatus(200));
 }

@@ -17,6 +17,9 @@ var mongoServiceBase = module.exports = function(reference, collection) {
     self.getItems = function() {
         var defer = q.defer();
         self.db[self.collection].find({}, function(error, items) {
+            _.each(items, function(item) {
+                item.id = item._id;
+            });
             defer.resolve(items);
         });
         return defer.promise;
@@ -29,8 +32,17 @@ var mongoServiceBase = module.exports = function(reference, collection) {
         mongoData._id = new mongojs.ObjectId();
 
         self.db[self.collection].save(mongoData, function() {
-            delete mongoData._id;
+            mongoData.id = mongoData._id;
             defer.resolve(mongoData);
+        });
+
+        return defer.promise;
+    };
+
+    self.updateItem = function(id, data) {
+        var defer = q.defer();
+        self.db[self.collection].update({ _id: mongojs.ObjectId(id) }, _.omit(data, "id", "_id"), function(error) {
+            defer.resolve(data)
         });
 
         return defer.promise;
