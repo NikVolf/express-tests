@@ -4,7 +4,7 @@
 
 var apiRoot = "/js/api";
 
-require .config({
+require.config({
     paths: {
         "ko": "lib/knockout",
         "text": "lib/text",
