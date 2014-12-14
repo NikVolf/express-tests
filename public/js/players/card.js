@@ -2,14 +2,14 @@
  * Created by nikky on 12/6/14.
  */
 
-define(["shared/BaseViewModel", "text!./templates/card.html"], function(BaseViewModel, template) {
+define(["shared/BaseViewModel", "shared/behaviors/all", "text!./templates/card.html"], function(BaseViewModel, behaviors, template) {
     var PlayerCard = function(config) {
-        var merged = _.extend({ fields: ["name"] }, config);
+        var merged = _.extend(
+            {
+                fields: ["name", "age", "experience"]
+            },
+            config);
         var self = BaseViewModel(merged);
-
-        self.title = "Player Card";
-
-        self.isSelected = ko.observable(false);
 
         return self;
     };

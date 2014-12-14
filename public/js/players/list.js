@@ -1,13 +1,15 @@
 /**
  * Created by nikky on 12/6/14.
  */
-define(['shared/ListViewModel', "api/players/client", 'text!./templates/list.html', './card'],
-    function(ListViewModel, api, template, PlayerCard) {
+define(['shared/ListViewModel', "shared/behaviors/all", "api/players/client", 'text!./templates/list.html', 'shared/BaseViewModel'],
+    function(ListViewModel, behaviors, api, template, BaseViewModel) {
 
         var PlayerList = function() {
             var collectionCfg = {
                 "api": api,
-                "viewModel": PlayerCard
+                "viewModel": function() {
+                    return BaseViewModel.create(["name"]).behavior(behaviors.listItem);
+                }
             };
 
             var self = ListViewModel(collectionCfg);

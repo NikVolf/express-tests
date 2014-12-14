@@ -1,4 +1,3 @@
-<div data-bind="css: { selected: isSelected }, click: isSelected(true)">
 
     <div data-bind="if: diagnostic">
         $parent:
@@ -11,14 +10,10 @@
         <div data-bind="text: JSON.stringify(ko.toJS($root))"></div>
     </div>
 
-    <span>name: </span>
-    <div data-bind="if: isEdited">
-        <input data-bind="value: name, hasFocus: isEdited" />
-    </div>
     <div data-bind="ifnot: isEdited">
         <span data-bind="text: name"></span>
         <span data-bind="if: isModified">&nbsp; *</span>
         <span data-bind="if: isNew">&nbsp; NEW!</span>
     </div>
 
-</div>
+</li>

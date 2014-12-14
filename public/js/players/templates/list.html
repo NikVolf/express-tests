@@ -2,6 +2,23 @@
     <input type="button" value="add" data-bind="click:add" />
     <input type="button" value="save list" data-bind="click:save" />
 </div>
-<ul class="player-list" data-bind="foreach: items">
-    <player-card params="value: $data"></player-card>
-</ul>
+<div class="player-list-container" data-bind="with: list">
+    <ul class="player-list" data-bind="foreach: items">
+        <li class="dev-list-item" data-bind="css: { selected: isSelected }, click: select, clickBubble: false">
+            <div data-bind="text: name"></div>
+        </li>
+    </ul>
+</div>
+<div class="player-details-container" data-bind="with: details, if: list.selected">
+    <div data-bind="text: name">
+
+    </div>
+
+    <div data-bind="text: age">
+
+    </div>
+
+    <div data-bind="text: experience">
+
+    </div>
+</div>
