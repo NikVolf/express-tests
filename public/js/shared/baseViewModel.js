@@ -161,6 +161,25 @@ define([], function() {
             return result;
         };
 
+        self.fetch = function() {
+            var id = self.id();
+
+            return self.api.fetch(id).then(self.parse);
+        };
+
+        self.init = function(id) {
+            self.id(id);
+            return self.fetch();
+        };
+
+        self.behavior = function(behavior) {
+            if (_.isArray(behavior))
+                _.each(behavior, self.behavior);
+            else behavior.init(self);
+
+            return self;
+        };
+
         return self;
     };
 
@@ -168,6 +187,7 @@ define([], function() {
     BaseViewModel.extendedWith = function(componentClass) {
 
         _.extend(componentClass, _.pick(BaseViewModel, "extendedWith"));
+        componentClass.create = BaseViewModel.createClass.bind(undefined, componentClass);
 
         if (!componentClass.componentName)
             return;
@@ -196,6 +216,13 @@ define([], function() {
             });
 
     };
+
+    BaseViewModel.createClass = function(viewModelClass, config) {
+        var effectiveConfig = _.isArray(config) ? { fields: config } : config;
+        return new viewModelClass(effectiveConfig);
+    };
+
+    BaseViewModel.create = BaseViewModel.createClass.bind(undefined, BaseViewModel);
 
     return BaseViewModel;
 

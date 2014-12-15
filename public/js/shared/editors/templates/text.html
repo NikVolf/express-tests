@@ -1,0 +1,4 @@
+<div class="text-editor-container">
+    <div class="text-editor-display" data-bind="text: value, ifnot: isEdited, click: edit"></div>
+    <input data-bind="value: value, if: isEdited, hasFocus: isEdited">
+</div>

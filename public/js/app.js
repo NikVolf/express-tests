@@ -6,7 +6,7 @@ var apiRoot = "/js/api";
 
 require .config({
     paths: {
-        "ko": "lib/knockout",
+        "ko": "lib/knockout.debug",
         "text": "lib/text",
         "api": apiRoot,
         "underscore": "lib/underscore"
