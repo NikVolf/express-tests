@@ -17,6 +17,8 @@ define(['./BaseViewModel', './ListViewModel'], function(BaseViewModel, ListViewM
             var id = newObj.id();
             self.details.init(id);
         });
+
+        return self;
     };
 
     BaseViewModel.extendedWith(MasterDetailView);

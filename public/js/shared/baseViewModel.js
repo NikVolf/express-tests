@@ -16,6 +16,8 @@ define([], function() {
 
         self.isViewModel = true;
 
+        self.loading = ko.observable(false);
+
         self.observables = [];
 
         self.getFieldValue = function(key) {
@@ -162,12 +164,16 @@ define([], function() {
         };
 
         self.fetch = function() {
+            self.loading(true);
             var id = self.id();
-
-            return self.api.fetch(id).then(self.parse);
+            return self.api.fetch(id).then(function(data) {
+                self.parse(data);
+                self.loading(false);
+            });
         };
 
         self.init = function(id) {
+            self.id || (self.id = ko.observable(id));
             self.id(id);
             return self.fetch();
         };

@@ -28,7 +28,6 @@ define([], function() {
             $.ajax({
                 url: '/api/' + self.name + "/" + params,
                 type: "GET",
-                data: $.param(params || {}),
                 success: function (response) {
                     deferred.resolve(response);
                 }

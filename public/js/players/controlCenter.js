@@ -10,7 +10,15 @@ define(['api/players/client', 'shared/MasterDetailView', './list', './card', 'te
                 api: api,
                 listViewModel: PlayerList,
                 detailsViewModel: PlayerCard
-            })
+            });
+
+            self.entry = function() {
+                self.list.fetch();
+            };
+
+            self.editable = ko.observable(false);
+
+            return self;
         };
 
         PlayerControlCenter.componentName = 'players-control-center';

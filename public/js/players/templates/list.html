@@ -9,16 +9,20 @@
         </li>
     </ul>
 </div>
-<div class="player-details-container" data-bind="with: details, if: list.selected">
-    <div data-bind="text: name">
+<div data-bind='text: JSON.stringify(_.pick(ko.toJS(details), "loading", "isViewModel"))'>
+</div>
+<div class="player-details-container" data-bind="ifnot: details.loading">
+    <div class="player-details" data-bind="with: details">
+        <div data-bind="text: name">
 
-    </div>
+        </div>
 
-    <div data-bind="text: age">
+        <div data-bind="text: age">
 
-    </div>
+        </div>
 
-    <div data-bind="text: experience">
+        <div data-bind="text: experience">
 
+        </div>
     </div>
 </div>
